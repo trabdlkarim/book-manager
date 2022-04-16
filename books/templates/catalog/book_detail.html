@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %} Library {% endblock %}
+{% block header %}
+<h1 class="display-5 fw-bolder text-white mb-2">Book Detail</h1>
+<p class="lead text-white-50 mb-4">
+    {{ book.title }}
+</p>
+{% endblock %}
+{% block content %}
+<section class="py-5 border-bottom" id="features">
+    <div class="container px-5 my-5">
+      <div class="row gx-5 justify-content-center">
+        <div class="col-12">
+            <h1>Title: {{ book.title }}</h1>
+            <p><strong>Author:</strong> <a href="{{ book.author.get_absolute_url }}">{{ book.author }}</a></p>
+            <p><strong>Summary:</strong> {{ book.summary }}</p>
+            <p><strong>ISBN:</strong> {{ book.isbn }}</p> 
+            <p><strong>Language:</strong> {{ book.lang }}</p>  
+            <p><strong>Genre:</strong> {{ book.genre.all|join:", " }}</p>
+            <h4 class="mt-5">Book Copies ({{ book.issuedbook_set.all.count }})</h4>
+            <div class="ml-5 pl-5">
+            {% for copy in book.issuedbook_set.all %}
+                <hr>
+                <p class="{% if copy.status == 'a' %}text-success{% elif copy.status == 'm' %}text-danger{% else %}text-warning{% endif %}">{{ copy.get_status_display }}</p>
+                {% if copy.status != 'a' %}<p><strong>Due to be returned:</strong> {{copy.expiry_date}}</p>{% endif %}
+                <p><strong>Imprint:</strong> {{copy.imprint}}</p>
+                <p class="text-muted"><strong>Id:</strong> {{copy.id}}</p>
+                {% if user.is_authenticated and copy.status == 'a' %}
+                   <div class="text-end" role="group" aria-label="Actions">
+                    <button type="button" class="btn btn-sm btn-success"  data-bs-toggle="modal" data-bs-target="#borrowModal{{copy.id}}">Borrow</button>
+                    <a href="{% url 'book.reserve' pk=copy.id %}" class="btn btn-sm btn-danger">Reserve</a>
+                  </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="borrowModal{{copy.id}}" tabindex="-1" aria-labelledby="borrowModalLabel{{copy.id}}" aria-hidden="true">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="borrowModalLabel{{copy.id}}">Borrow Book</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                             <p>Are sure you want to borrow {{ book.title }} by {{ book.author }}?</p>
+                             <form id="modalForm{{copy.id}}" method="POST" action="{% url 'book.borrow' pk=copy.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="issued" value="{{copy.id }}"/>
+                             </form>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-sm btn-success" onclick="document.getElementById('modalForm{{copy.id}}').submit()">Confirm</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>                  
+                {% endif %}
+            {% endfor %}
+            </div>
+        </div>
+      </div>
+    </div>
+</section>
+{% endblock %} 

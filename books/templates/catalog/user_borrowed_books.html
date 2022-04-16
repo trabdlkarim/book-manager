@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %} My Borrowed Books {% endblock %}
+{% block header %}
+<h1 class="display-5 fw-bolder text-white mb-2">My Borrowed Books</h1>
+{% endblock %} 
+{% block content %}
+<section class="py-5 border-bottom" id="features">
+    <div class="container px-5 my-5">
+      <div class="row gx-5 justify-content-center">
+        <div class="col-12">
+            <h1>Borrowed ({{ issuedbook_list | length }})</h1>
+            {% if issuedbook_list %}
+            <ul>
+                {% for issued in issuedbook_list %}
+                <li class="{% if issued.is_overdue %}text-danger{% endif %}">
+                  <a href="{% url 'book.detail' issued.book.pk %}">{{issued.book.title}}</a> ({{ issued.expiry_date }})
+                  {% if issued.is_overdue %} - OVERDUE{% endif %}
+                </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+               <p>You have no borrowed books from the library yet.</p>
+            {% endif %} 
+        </div>
+        {% if is_paginated %}
+        <div class="col-12">
+            <div class="pagination">
+                <span class="page-links">
+                    {% if page_obj.has_previous %}
+                        <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">Previous</a>
+                    {% endif %}
+                    <span class="page-current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+                    {% if page_obj.has_next %}
+                        <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">Next</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+       {% endif %}
+      </div>
+    </div>
+</section>      
+{% endblock %}

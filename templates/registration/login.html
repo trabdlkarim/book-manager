@@ -1,0 +1,80 @@
+{% extends "base.html" %} 
+{% block title %} Login {% endblock %}
+{% block header %}
+<h1 class="display-5 fw-bolder text-white mb-2">Access your account</h1>
+<p class="lead text-white-50 mb-4">
+  Sign in to create lists, bibliographies and reviews of library materials.
+</p>
+<div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+  <a class="btn btn-outline-light btn-lg px-4" href="{% url 'register' %}">Create a free account</a>
+</div>
+{% endblock %} 
+{% block content %}
+<section class="py-5 border-bottom" id="features">
+  <div class="container px-5 my-5">
+    <div class="row gx-5 justify-content-center">
+      <div class="col-md-6">
+        <div class="login-form bg-light p-4">
+          {% if form.errors and not form.non_field_errors %}
+          <p class="text-danger">
+            {% if form.errors.items|length == 1 %} 
+             Please correct the error below. 
+            {% else %} 
+              Please correct the errors below. 
+            {% endif %}
+          </p>
+          {% endif %} 
+          {% if form.non_field_errors %} 
+           {% for error in form.non_field_errors %}
+            <p class="text-danger">{{ error }}</p>
+           {% endfor %} 
+          {% endif %}
+          <form action="{{ app_path }}" method="post" id="login-form" class="row g-3">
+            {% csrf_token %}
+            <h4>Login</h4>
+            <div class="col-12">
+              {{ form.username.label_tag }}
+              <input
+                type="text"
+                name="username"
+                class="form-control"
+                placeholder="Username"
+              />
+              {{ form.username.errors }}
+            </div>
+            <div class="col-12">
+              {{ form.password.label_tag }}
+              <input
+                type="password"
+                name="password"
+                class="form-control"
+                placeholder="Password"
+              />
+              {{ form.password.erros }}
+            </div>
+            <div class="col-12">
+              {% url 'password_reset' as password_reset_url %} 
+              {% if password_reset_url %}
+              <div class="password-reset-link">
+                <a href="{{ password_reset_url }}">Forgotten your password?</a>
+              </div>
+              {% endif %}
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-dark float-end">
+                Login
+              </button>
+            </div>
+          </form>
+          <hr class="mt-4" />
+          <div class="col-12">
+            <p class="text-center mb-0">
+              Have not account yet? <a href="{% url 'register' %}">Sign up</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

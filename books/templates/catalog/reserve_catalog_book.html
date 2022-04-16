@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %} Reserve Book {% endblock %}
+{% block header %}
+<h1 class="display-5 fw-bolder text-white mb-2">Reserve A Book</h1>
+<p class="lead text-white-50 mb-4">
+    {{ book.title }}
+</p>
+{% endblock %}
+{% block content %}
+<section class="py-5 border-bottom" id="features">
+    <div class="container px-5 my-5">
+      <div class="row gx-5 justify-content-center">
+        <div class="col-12">
+            <h1>Reserve: {{book_instance.book.title}}</h1>
+            <p>Borrower: {{user}}</p>
+            <p>ID: {{book_instance.id}}</p>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="submit-row">
+                    <button type="submit" class="btn btn-dark text-end">Reserve</button>
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+</section>
+{% endblock %}

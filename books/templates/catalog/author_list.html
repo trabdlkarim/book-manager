@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %} Library {% endblock %}
+{% block header %}
+<h1 class="display-5 fw-bolder text-white mb-2">Our Best-Selling Authors</h1>
+<p class="lead text-white-50 mb-4">
+  A rich library with all genres of books, lists, bibliographies and reviews of library materials.
+</p>
+{% endblock %} 
+{% block content %}
+<section class="py-5 border-bottom" id="features">
+    <div class="container px-5 my-5">
+      <div class="row gx-5 justify-content-center">
+        <div class="col-12">
+            <h1>Author List</h1>
+            {% if author_list %}
+            <ul>
+            {% for author in author_list %}
+                <li>
+                <a href="{{ author.get_absolute_url }}">
+                {{ author }} ({{author.country}})
+                </a>
+                </li>
+            {% endfor %}
+            </ul>
+            {% else %}
+            <p>There are no authors available.</p>
+            {% endif %}
+        </div>
+        {% if is_paginated %}
+        <div class="col-12">
+            <div class="pagination">
+                <span class="page-links">
+                    {% if page_obj.has_previous %}
+                        <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">Previous</a>
+                    {% endif %}
+                    <span class="page-current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+                    {% if page_obj.has_next %}
+                        <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">Next</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+       {% endif %}        
+      </div>
+    </div>
+</section>
+{% endblock %}

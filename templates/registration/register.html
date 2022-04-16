@@ -1,0 +1,32 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block header %}
+<h1 class="display-5 fw-bolder text-white mb-2">Creat a free account</h1>
+<p class="lead text-white-50 mb-4">
+  Sign up to create lists, bibliographies and reviews of library materials.
+</p>
+{% endblock %}
+
+{% block content %}
+<section class="py-5 border-bottom" id="features">
+  <div class="container px-5 my-5">
+    <div class="row gx-5 justify-content-center">
+      <div class="col-md-12">
+        <div class="login-form bg-light p-4">
+          <h2>Sign up</h2>
+          <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="text-right">
+              <button type="submit" class="btn btn-dark">Sign Up</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
